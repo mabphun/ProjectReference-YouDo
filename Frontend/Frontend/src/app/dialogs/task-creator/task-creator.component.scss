@@ -1,0 +1,36 @@
+.creator{
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 600px;
+}
+
+mat-form-field{
+    width: 100%;
+}
+
+.estimation {
+    background-color: rgb(234, 231, 231);
+    padding: 5px;
+    border-radius: 10px;
+    width: 95%;
+    margin: auto;
+    margin-bottom: 20px;
+}
+
+.estimation div{
+    position: relative;
+    top: 2px;
+}
+
+.estimation span{
+    margin-left: 5px;
+    position: relative;
+    top: -5px;
+}
+
+// .estimation mat-icon{
+//     position: relative;
+//     top: 5px;
+// }

@@ -1,0 +1,87 @@
+<h2 mat-dialog-title>Submit Progress</h2>
+<mat-dialog-content>
+  <div class="container">
+    <h3 class="title">Task properties</h3>
+    <div class="info-line userDisplay">
+        <h5 class="describer">Assignee:</h5>
+        <span>{{data.task.assignee.firstName + ' ' + data.task.assignee.lastName}}</span>
+        <mat-icon [mat-menu-trigger-for]="assigneemenu" class="edit-icon">edit</mat-icon>
+    </div>
+    <div class="info-line">
+        <h5 class="describer">Priority:</h5>
+        <span>{{priorityConverter.ConvertPriorityToString(data.task.priority)}}</span>
+        <mat-icon [mat-menu-trigger-for]="prioritymenu" class="edit-icon">edit</mat-icon>
+    </div>
+    <div class="info-line">
+        <h5 class="describer">Workflow:</h5>
+        <span>{{data.task.getCurrentWorkflow()}}</span>
+        <mat-icon [mat-menu-trigger-for]="workflowmenu" class="edit-icon">edit</mat-icon>
+    </div>
+    <div class="logger">
+        <h3 class="title">Log worktime</h3>
+        <div>
+          <button mat-icon-button matTooltip="This estimation was made on how long have you been assigned to this task since it's last change.">
+            <mat-icon>info</mat-icon>
+          </button>
+          <span class="est-time">{{getEstimatedTime()}}</span>
+        </div>
+        <mat-form-field>
+            <mat-label>Time spent</mat-label>
+            <input matInput
+            (keyup)="check(getValue($event))" >
+            <!-- <mat-hint><strong>Format:</strong> X d(ays) | X h(ours) | X m(inutes)</mat-hint>
+            <mat-hint><strong>Format:</strong> X d(ays) | X h(ours) | X m(inutes)</mat-hint> -->
+        </mat-form-field>
+        <div class="format-error" *ngIf="invalidFormatError">
+            <h3 class="h-title">Error!</h3>
+            <p class="h-text">Invalid format.</p>
+        </div>
+        <div *ngIf="(calculatedTime[0] !== '' || calculatedTime[1] !== '' || calculatedTime[2] !== '') && !invalidFormatError">
+            <div class="hints"><strong>Calculated time: </strong></div> 
+            <span *ngIf="calculatedTime[0] !== ''"> {{calculatedTime[0]}} day(s) </span>
+            <span *ngIf="calculatedTime[1] !== ''"> {{calculatedTime[1]}} hour(s) </span>
+            <span *ngIf="calculatedTime[2] !== ''"> {{calculatedTime[2]}} minute(s) </span>
+        </div>
+        <div class="hints">
+            <strong>Formats:</strong>
+            <p class="h-title">Using only one:</p>
+            <p class="h-text">X d(ays) | X h(ours) | X m(inutes)</p>
+            <p class="h-title">Using multiple: </p>
+            <p class="h-text">X d(ays); X h(ours); X m(inutes)</p>
+        </div>
+        <!-- <button (click)="check()">Check</button> -->
+      </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button color="warn" (click)="onNoClick()">Cancel</button> <!-- (click)="onNoClick()"-->
+  <button mat-button color="primary" (click)="onYesClick()" cdkFocusInitial>Ok</button> <!-- cdkFocusInitial -->
+</mat-dialog-actions>
+
+
+<mat-menu #workflowmenu="matMenu">
+    <button (click)="setEditedTaskWorkflow(item)" mat-menu-item *ngFor="let item of data.task.workflowItems">
+        <span>{{item.name}}</span>
+    </button>
+</mat-menu>
+
+<mat-menu #assigneemenu="matMenu">
+    <button (click)="setEditedTaskAssignee(item)" mat-menu-item *ngFor="let item of data.task.taskList.assignedMembers">
+        <span>{{item.firstName + ' ' + item.lastName + ' (' + item.userName + ')'}}</span>
+    </button>
+</mat-menu>
+
+<mat-menu #prioritymenu="matMenu">
+    <button (click)="data.task.priority=0" mat-menu-item>
+        <!-- <mat-icon>dialpad</mat-icon> -->
+        <span>Low</span>
+    </button>
+    <button (click)="data.task.priority=1" mat-menu-item>
+        <!-- <mat-icon>voicemail</mat-icon> -->
+        <span>Normal</span>
+    </button>
+    <button (click)="data.task.priority=2" mat-menu-item>
+        <!-- <mat-icon>voicemail</mat-icon> -->
+        <span>High</span>
+    </button>
+</mat-menu>

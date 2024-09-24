@@ -1,0 +1,14 @@
+<div class="main">
+    <h1>Lists</h1>
+    <a color="primary" mat-flat-button (click)="openCreatorDialog()">
+        <mat-icon>add</mat-icon>Create List
+    </a>
+    <div class="lists">
+        <div class="list" *ngFor="let list of lists" >
+            <a [routerLink]="['/list/', list.id]" class="title">{{list.name}}</a>
+            <p class="list-description">{{displayText(list.description)}}</p>
+            <a class="btn" mat-flat-button color="primary" [routerLink]="['/list/', list.id]">V View</a>
+            <a class="btn" *ngIf="list.creator.id === apiService.getUserId()" mat-flat-button color="warn" (click)="this.openDeleteDialog(list)">X Delete</a>
+        </div>
+    </div>
+</div>

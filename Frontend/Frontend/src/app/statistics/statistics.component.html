@@ -1,0 +1,30 @@
+<div class="container">
+  <div class="div1">
+    <app-piechart></app-piechart>
+  </div>
+  <div class="div2">
+    <app-linechart></app-linechart>
+  </div>
+  <div class="div3">
+    <div class="stat-container">
+      <div class="stat-div1">
+        <h3 class="title">Additional Task information</h3>
+        <p>Number of Tasks assigned to You.</p>
+        <div class="info-block">
+          <span>To Do: {{getNumberOfTodoTasks()}}</span>
+          <button mat-stroked-button (click)="filter(0)">Show</button>
+        </div>
+        <div class="info-block">
+          <span>Done: {{getNumberOfDoneTasks()}}</span>
+          <button mat-stroked-button (click)="filter(100)">Show</button>
+      </div>
+      </div>
+      <div *ngIf="selectedTasks.length > 0" class="task-container stat-div2">
+        <h3 class="title">Tasks:</h3>
+        <div class="task" *ngFor="let task of selectedTasks">
+          <a [routerLink]="['/task/', task.id]">{{task.title}}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

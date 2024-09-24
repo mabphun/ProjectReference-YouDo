@@ -1,0 +1,25 @@
+<div class="container">
+    <div class="div1">
+        <div class="details">
+            <img [src]="user.image">
+            <h3>{{user.firstName + ' ' + user.lastName}}</h3>
+            <p>{{user.userName}}</p>
+        </div>
+    </div>
+    <div class="div2">
+        <div class="links">
+            <div class="lists" *ngIf="lists.length > 0">
+                <h3 class="title">Assigned lists:</h3>
+                <div class="list" *ngFor="let list of lists">
+                    <a [routerLink]="['/list/', list.id]">{{list.name}}</a>
+                </div>
+            </div>
+            <div class="tasks" *ngIf="tasks.length > 0">
+                <h3 class="title">Assigned tasks:</h3>
+                <div class="task" *ngFor="let task of tasks">
+                    <a [routerLink]="['/task/', task.id]">{{task.title}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

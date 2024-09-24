@@ -1,0 +1,16 @@
+<div>
+    <h3 class="title">Weekly logged work time</h3>
+    <p>Work time between {{getStartDate()}} and {{getEndDate()}}.</p>
+    <button mat-stroked-button (click)="filter(1)">Last week</button>
+    <button mat-stroked-button [disabled]="numberOfWeeks === 0" (click)="filter(-1)">Next week</button>
+  </div>
+<div class="linechart">
+    <canvas *ngIf="isBrowser && filteredList.length !== 0" baseChart width="600" height="400"
+        [type]="lineChartType"
+        [data]="lineChartData"
+        [options]="options">
+    </canvas>
+</div>
+<div class="loading" *ngIf="filteredList.length === 0">
+    <div>No data found for this period</div>
+</div>

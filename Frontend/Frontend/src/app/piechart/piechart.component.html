@@ -1,0 +1,18 @@
+<div>
+  <h3 class="title">Task specific statistic</h3>
+  <p>Work time on each Task in the last {{filterDay}} day(s).</p>
+  <button mat-stroked-button (click)="filter(30)">30 days</button>
+  <button mat-stroked-button (click)="filter(7)">7 days</button>
+  <button mat-stroked-button (click)="filter(1)" >1 day</button>
+  <button mat-stroked-button (click)="changeMode()" [disabled]="filteredList.length === 0" >{{getChangeModeButtonText()}} </button>
+</div>
+<div class="piechart">
+  <canvas *ngIf="isBrowser && filteredList.length !== 0" #pieChart baseChart width="600" height="400" [type]="'pie'"
+    [data]="lineChartData"
+    [options]="lineChartOptions">
+  </canvas>
+</div>
+
+<div class="loading" *ngIf="filteredList.length === 0">
+  <div>No data found for this period</div>
+</div>

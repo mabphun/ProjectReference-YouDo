@@ -1,0 +1,55 @@
+<h2 mat-dialog-title>Edit Workflows</h2>
+<mat-dialog-content>
+  <div class="container">
+    <button mat-flat-button color="primary" (click)="addNewWorkflow()">Add new</button>
+    <!-- <button class="icon-btn" 
+        matTooltipPosition="right" 
+        mat-icon-button 
+        matTooltip="This estimation was made on how long have you been assigned to this task since it's last change.">
+        <mat-icon>info</mat-icon>
+    </button> -->
+    <div class="errors" *ngIf="isAnyError()">
+        <div *ngIf="multipleActive">
+            Error! There are multiple active items.
+        </div>
+        <div *ngIf="noneActive">
+            Error! There is no active item.
+        </div>
+        <div *ngIf="matchingOrders">
+            Error! There is two or more items with the same Order.
+        </div>
+        <div *ngIf="requiredValues">
+            Error! Name and Order fields are required.
+        </div>
+        <div *ngIf="orderRange">
+            Error! Order number needs to be between 1 and 99.
+        </div>
+    </div>
+    <div class="wf-list">
+        <div class="parent" *ngFor="let wf of workflows">
+            <div class="div1">
+                <mat-form-field>
+                    <mat-label>Name</mat-label>
+                    <input matInput [disabled]="!wf.isDeletable" [(ngModel)]="wf.name" placeholder="Name">
+                </mat-form-field>
+            </div>
+            <div class="div2">
+                <mat-form-field>
+                    <mat-label>Order</mat-label>
+                    <input type="number" matInput [disabled]="!wf.isDeletable" [(ngModel)]="wf.order" placeholder="Order">
+                </mat-form-field>
+            </div>
+            <div class="div3">
+                <mat-checkbox [(ngModel)]="wf.isActive" >Is Active?</mat-checkbox>
+            </div>
+            <div class="div4">
+                <button *ngIf="wf.isDeletable" mat-flat-button color="warn" (click)="removeWorkflow(wf)">Remove</button>
+            </div>
+        </div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button color="warn" (click)="onNoClick()">Cancel</button> <!-- (click)="onNoClick()"-->
+  <button mat-button [disabled]="isAnyError()" color="primary" (click)="onYesClick()" cdkFocusInitial>Save</button> <!-- cdkFocusInitial -->
+</mat-dialog-actions>

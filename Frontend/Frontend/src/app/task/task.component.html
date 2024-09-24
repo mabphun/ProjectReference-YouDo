@@ -1,0 +1,337 @@
+<div class="container" *ngIf="!isInEditMode">
+    <div class="details">
+        <h5>Task Details</h5>
+        <h3 class="title">{{task.title}}</h3>
+        <div class="actions">
+            <a class="action" mat-stroked-button (click)="editTask()">Edit Task</a>
+            <a class="action" mat-stroked-button (click)="openSubmitProgressDialog()">Submit Progress</a>
+            <a class="action" mat-stroked-button (click)="openWorkLoggerDialog()">Log Work</a>
+            <a class="action " *ngIf="task.creator.id == api.getUserId()"  mat-stroked-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+                <span>More</span>
+            </a>
+        </div>
+        <p class="description" [innerHTML]="displayText()"></p>
+    </div>
+    <div class="info">
+        <h5>Informations</h5>
+        <div class="info-line userDisplay">Assignee:
+            <div>
+                <img [src]="task.assignee.image"/>
+                <span>{{task.assignee.firstName + ' ' + task.assignee.lastName}}</span>
+            </div>
+        </div>
+        <div class="info-line userDisplay">Creator:
+            <div>
+                <img [src]="task.creator.image"/>
+                <span>{{task.creator.firstName + ' ' + task.creator.lastName}}</span>
+            </div>
+        </div>
+        <div class="info-line">Priority: 
+            <mat-chip class="chip">
+                {{priorityConverter.ConvertPriorityToString(task.priority)}}
+            </mat-chip>
+        </div>
+        <div class="info-line">Deadline:
+            {{dateConverter.ConvertUtcToLocalDate(task.deadline)}}
+        </div>
+        <div class="info-line">Workflow: 
+            <mat-chip class="chip">
+                {{task.getCurrentWorkflow()}}
+            </mat-chip>
+        </div>
+        <div class="info-line">Estimated time:
+            {{task.estimated}} hrs
+            <mat-progress-bar mode="determinate" [value]="getEstimatedValue()"></mat-progress-bar>
+        </div>
+        <div class="info-line">Logged time:
+            {{sumWorkLogs(task.userWorkLogs)}} hrs
+            <mat-progress-bar mode="determinate" [value]="getLoggedWorkValue()"></mat-progress-bar>
+        </div>
+        <div class="info-line">Updated at:
+            {{dateConverter.ConvertUtcToLocalFullDate(task.updatedAt)}}
+        </div>
+        <div class="info-line">Created at:
+            {{dateConverter.ConvertUtcToLocalFullDate(task.createdAt)}}
+        </div>
+    </div>
+</div>
+<!-- 
+    =================================================
+    =================================================
+    =================================================
+    =================================================
+                EDIT MODE STARTS HERE 
+    =================================================
+    =================================================
+    =================================================
+    =================================================
+-->
+
+<div class="edit-container" *ngIf="isInEditMode">
+    <div class="details">
+        <h5>Task Details</h5>
+        <mat-form-field class="edit-title">
+            <mat-label>Title</mat-label>
+            <input matInput minlength="3" maxlength="50" placeholder="Title..." [(ngModel)]="editedTask.title">
+        </mat-form-field>
+        <div class="actions">
+            <a class="action" mat-stroked-button color="warn" (click)="cancelEditing()">Cancel</a>
+            <a class="action" mat-stroked-button color="primary" (click)="openDialog()">Save</a>
+        </div>
+        <mat-form-field class="edit-description">
+            <mat-label>Details</mat-label>
+            <textarea style="resize: none;" maxlength="700" rows="5" matInput [(ngModel)]="editedTask.details" placeholder="Details..."></textarea>
+        </mat-form-field>
+    </div>
+    <div class="info">
+        <h5>Informations</h5>
+        <div class="info-line userDisplay">Assignee:
+            <div>
+                <img [src]="editedTask.assignee.image"/>
+                <span>{{editedTask.assignee.firstName + ' ' + editedTask.assignee.lastName}}</span>
+                <mat-icon [mat-menu-trigger-for]="assigneemenu" class="edit-icon">edit</mat-icon>
+            </div>
+        </div>
+        <div class="info-line userDisplay">Creator:
+            <div>
+                <img [src]="editedTask.creator.image"/>
+                <span>{{editedTask.creator.firstName + ' ' + editedTask.creator.lastName}}</span>
+            </div>
+        </div>
+        <div class="info-line">Priority: 
+            <mat-chip [matMenuTriggerFor]="prioritymenu" class="chip">
+                {{priorityConverter.ConvertPriorityToString(editedTask.priority)}}
+            </mat-chip>
+        </div>
+        
+        <div class="info-line">Deadline:
+            <mat-form-field class="deadline">
+                <mat-label>Choose a date</mat-label>
+                <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker" [formControl]="date">
+                <mat-hint>YYYY.MM.DD</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <!-- {{dateConverter.ConvertUtcToLocalDate(editedTask.deadline)}}
+            <mat-icon (click)="picker.open()" class="edit-icon">edit</mat-icon> -->
+        </div>
+        <!-- <div class="info-line">Deadline:
+            {{dateConverter.ConvertUtcToLocalDate(editedTask.deadline)}}
+            <mat-icon (click)="picker.open()" class="edit-icon">edit</mat-icon>
+        </div> -->
+        <div class="info-line">Workflow: 
+            <mat-chip [matMenuTriggerFor]="workflowmenu" class="chip">
+                {{editedTask.getCurrentWorkflow()}}
+            </mat-chip>
+        </div>
+        <div class="info-line">Estimated time</div>
+        <div class="info-line">Logged time</div>
+        <div class="info-line">Updated at:
+            {{dateConverter.ConvertUtcToLocalFullDate(editedTask.updatedAt)}}
+        </div>
+        <div class="info-line">Created at:
+            {{dateConverter.ConvertUtcToLocalFullDate(editedTask.createdAt)}}
+        </div>
+    </div>
+</div>
+
+<!-- 
+    =================================================
+    =================================================
+    =================================================
+    =================================================
+                ChangeLogs STARTS HERE 
+    =================================================
+    =================================================
+    =================================================
+    =================================================
+-->
+<div class="activity-container">
+    <div class="activity-div">
+        <h4 class="activity-title">Activity</h4>
+        <div  *ngFor="let changelog of task.changeLogs">
+            <div class="activity-element" *ngIf="_changeLogService.isSomethingChangedInDto(changelog)">
+                <span class="activity-name">{{changelog.changer.firstName + ' ' + changelog.changer.lastName}}</span>
+                <span class="activity-divider"></span>
+                <span class="activity-date">{{dateConverter.ConvertUtcToLocalFullDate(changelog.changeDate)}}</span>
+                <div class="activity-parent">
+                    <div class="div1"></div>
+                    <div class="div2">Old</div>
+                    <div class="div3">New</div>
+                    
+                    <!-- Title -->
+                    <div class="activity-property" 
+                    *ngIf="changelog.oldTitle !== changelog.newTitle">
+                        Title: </div>
+                    <div *ngIf="changelog.oldTitle !== changelog.newTitle">
+                        {{changelog.oldTitle}}</div>
+                    <div *ngIf="changelog.oldTitle !== changelog.newTitle">
+                        {{changelog.newTitle}}</div>
+
+                    <!-- Details -->    
+                    <div class="activity-property" 
+                    *ngIf="changelog.oldDetails !== changelog.newDetails">
+                        Details: </div>
+                    <div *ngIf="changelog.oldDetails !== changelog.newDetails">
+                        {{changelog.oldDetails}}</div>
+                    <div *ngIf="changelog.oldDetails !== changelog.newDetails">
+                        {{changelog.newDetails}}</div>
+
+                    <!-- Priority -->    
+                    <div class="activity-property" 
+                    *ngIf="changelog.oldPriority !== changelog.newPriority">
+                        Priority: </div>
+                    <div *ngIf="changelog.oldPriority !== changelog.newPriority">
+                        {{changelog.oldPriority}}</div>
+                    <div *ngIf="changelog.oldPriority !== changelog.newPriority">
+                        {{changelog.newPriority}}</div>
+
+                    <!-- Assignee -->
+                    <div class="activity-property" 
+                    *ngIf="changelog.oldAssigneeId !== changelog.newAssigneeId">
+                        Assignee: </div>
+                    <div *ngIf="changelog.oldAssigneeId !== changelog.newAssigneeId">
+                        {{changelog.oldAssignee.userName}}</div>
+                    <div *ngIf="changelog.oldAssigneeId !== changelog.newAssigneeId">
+                        {{changelog.newAssignee.userName}}</div>
+
+                    <!-- Deadline -->
+                    <div class="activity-property" 
+                    *ngIf="changelog.oldDeadline !== changelog.newDeadline">
+                        Deadline: </div>
+                    <div *ngIf="changelog.oldDeadline !== changelog.newDeadline">
+                        {{dateConverter.ConvertFormattedUtcToLocalDate(changelog.oldDeadline)}}</div>
+                    <div *ngIf="changelog.oldDeadline !== changelog.newDeadline">
+                        {{dateConverter.ConvertFormattedUtcToLocalDate(changelog.newDeadline)}}</div>
+
+                    <!-- WorkflowItem -->
+                    <div class="activity-property" 
+                    *ngIf="changelog.oldWorkflowItem.id !== changelog.newWorkflowItem.id">
+                        Workflow: </div>
+                    <div *ngIf="changelog.oldWorkflowItem.id !== changelog.newWorkflowItem.id">
+                        {{changelog.oldWorkflowItem.name}}</div>
+                    <div *ngIf="changelog.oldWorkflowItem.id !== changelog.newWorkflowItem.id">
+                        {{changelog.newWorkflowItem.name}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<mat-menu #menu="matMenu">
+    <a mat-menu-item (click)="openWorkflowEditorDialog()">
+        <mat-icon>dialpad</mat-icon>
+        <span>Edit Workflows</span>
+    </a>
+    <a mat-menu-item (click)="openDeleteDialog()">
+        <mat-icon>voicemail</mat-icon>
+        <span>Delete Task</span>
+    </a>
+</mat-menu>
+
+
+<mat-menu #workflowmenu="matMenu">
+    <button (click)="setEditedTaskWorkflow(item)" mat-menu-item *ngFor="let item of editedTask.workflowItems">
+        <span>{{item.name}}</span>
+    </button>
+</mat-menu>
+
+<mat-menu #assigneemenu="matMenu">
+    <button (click)="setEditedTaskAssignee(item)" mat-menu-item *ngFor="let item of editedTask.taskList.assignedMembers">
+        <span>{{item.firstName + ' ' + item.lastName + ' (' + item.userName + ')'}}</span>
+    </button>
+</mat-menu>
+
+<mat-menu #prioritymenu="matMenu">
+    <button (click)="editedTask.priority=0" mat-menu-item>
+        <!-- <mat-icon>dialpad</mat-icon> -->
+        <span>Low</span>
+    </button>
+    <button (click)="editedTask.priority=1" mat-menu-item>
+        <!-- <mat-icon>voicemail</mat-icon> -->
+        <span>Normal</span>
+    </button>
+    <button (click)="editedTask.priority=2" mat-menu-item>
+        <!-- <mat-icon>voicemail</mat-icon> -->
+        <span>High</span>
+    </button>
+</mat-menu>
+
+<mat-form-field class="colorPicker" style="visibility: hidden;">
+    <mat-label>Select an option</mat-label>
+    <mat-select [(value)]="color">
+      <mat-option value="blue">Low</mat-option>
+      <mat-option value="red">Normal</mat-option>
+      <mat-option value="green">High</mat-option>
+    </mat-select>
+</mat-form-field>
+<!--
+<div class="test">
+    
+    <mat-grid-list cols="4" rowHeight="200px">
+        <mat-grid-tile
+            [colspan]="3"
+            [rowspan]="1"
+            style="background-color: rgb(251, 239, 220);">
+            <div class="details" 
+            style="
+            background-color: bisque;
+            width: 100%;
+            margin: 10px;">
+                <h3>{{task.title}}</h3>
+                <p>{{task.details}}</p>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile
+            [colspan]="1"
+            [rowspan]="1">
+            wdqdwqd
+        </mat-grid-tile>
+    </mat-grid-list>
+      
+</div>
+-->
+<!--
+<div class="container">
+    <a class="title" [href]="url">{{task.title}}</a><span>+ copy icon</span>
+    <div class="actions">
+        <span><a href="" mat-raised-button>asd</a></span>
+        <span><a href="" mat-raised-button>asd</a></span>
+        <span><a href="" mat-raised-button>asd</a></span>
+        <span><a href="" mat-raised-button>asd</a></span>
+    </div>
+
+<mat-grid-list style="height: 720px;" cols="7" gutterSize="10" rowHeight="10vh">
+    <mat-grid-tile
+        [colspan]="5"
+        [rowspan]="5"
+        style="background-color: rgb(255, 255, 255); border-radius: 10px;">
+        <mat-grid-tile-header>Details:</mat-grid-tile-header>
+        <div class="details" style="overflow-y: scroll; height: 38vh; padding: 10px;">
+        <p >
+           Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maiores rem ea quibusdam nisi consequatur expedita veritatis recusandae laudantium suscipit totam beatae libero repudiandae sint harum, sequi animi corporis accusantium. Odit. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolor mollitia quidem molestias quos autem dignissimos ex accusantium, voluptas sapiente laudantium optio corporis hic deleniti laboriosam quisquam, minus quasi, est recusandae. Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis minima aperiam laborum amet minus tempore, quisquam rerum sapiente nostrum quam molestias sed aspernatur excepturi reiciendis, iste, omnis at animi id. Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam repellendus exercitationem autem vero aliquid dignissimos labore numquam corrupti pariatur nesciunt. Corrupti laudantium quaerat quia ratione rem facere totam corporis! Nesciunt. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde nobis nemo illo aperiam placeat asperiores veritatis dicta impedit ipsam, mollitia iste quae dolorem! Earum, dolore. Eius sunt ad dolores dignissimos.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maiores rem ea quibusdam nisi consequatur expedita veritatis recusandae laudantium suscipit totam beatae libero repudiandae sint harum, sequi animi corporis accusantium. Odit. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolor mollitia quidem molestias quos autem dignissimos ex accusantium, voluptas sapiente laudantium optio corporis hic deleniti laboriosam quisquam, minus quasi, est recusandae. Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis minima aperiam laborum amet minus tempore, quisquam rerum sapiente nostrum quam molestias sed aspernatur excepturi reiciendis, iste, omnis at animi id. Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam repellendus exercitationem autem vero aliquid dignissimos labore numquam corrupti pariatur nesciunt. Corrupti laudantium quaerat quia ratione rem facere totam corporis! Nesciunt. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde nobis nemo illo aperiam placeat asperiores veritatis dicta impedit ipsam, mollitia iste quae dolorem! Earum, dolore. Eius sunt ad dolores dignissimos.
+           Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maiores rem ea quibusdam nisi consequatur expedita veritatis recusandae laudantium suscipit totam beatae libero repudiandae sint harum, sequi animi corporis accusantium. Odit. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolor mollitia quidem molestias quos autem dignissimos ex accusantium, voluptas sapiente laudantium optio corporis hic deleniti laboriosam quisquam, minus quasi, est recusandae. Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis minima aperiam laborum amet minus tempore, quisquam rerum sapiente nostrum quam molestias sed aspernatur excepturi reiciendis, iste, omnis at animi id. Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam repellendus exercitationem autem vero aliquid dignissimos labore numquam corrupti pariatur nesciunt. Corrupti laudantium quaerat quia ratione rem facere totam corporis! Nesciunt. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde nobis nemo illo aperiam placeat asperiores veritatis dicta impedit ipsam, mollitia iste quae dolorem! Earum, dolore. Eius sunt ad dolores dignissimos.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maiores rem ea quibusdam nisi consequatur expedita veritatis recusandae laudantium suscipit totam beatae libero repudiandae sint harum, sequi animi corporis accusantium. Odit. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolor mollitia quidem molestias quos autem dignissimos ex accusantium, voluptas sapiente laudantium optio corporis hic deleniti laboriosam quisquam, minus quasi, est recusandae. Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis minima aperiam laborum amet minus tempore, quisquam rerum sapiente nostrum quam molestias sed aspernatur excepturi reiciendis, iste, omnis at animi id. Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam repellendus exercitationem autem vero aliquid dignissimos labore numquam corrupti pariatur nesciunt. Corrupti laudantium quaerat quia ratione rem facere totam corporis! Nesciunt. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde nobis nemo illo aperiam placeat asperiores veritatis dicta impedit ipsam, mollitia iste quae dolorem! Earum, dolore. Eius sunt ad dolores dignissimos.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maiores rem ea quibusdam nisi consequatur expedita veritatis recusandae laudantium suscipit totam beatae libero repudiandae sint harum, sequi animi corporis accusantium. Odit. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolor mollitia quidem molestias quos autem dignissimos ex accusantium, voluptas sapiente laudantium optio corporis hic deleniti laboriosam quisquam, minus quasi, est recusandae. Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis minima aperiam laborum amet minus tempore, quisquam rerum sapiente nostrum quam molestias sed aspernatur excepturi reiciendis, iste, omnis at animi id. Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam repellendus exercitationem autem vero aliquid dignissimos labore numquam corrupti pariatur nesciunt. Corrupti laudantium quaerat quia ratione rem facere totam corporis! Nesciunt. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde nobis nemo illo aperiam placeat asperiores veritatis dicta impedit ipsam, mollitia iste quae dolorem! Earum, dolore. Eius sunt ad dolores dignissimos.
+        </p>
+        </div>
+        <mat-grid-tile-footer style="background-color: #3f51b5;">Last updated: {{task.updatedAt}}</mat-grid-tile-footer>
+    </mat-grid-tile>
+    <mat-grid-tile
+        [colspan]="2"
+        [rowspan]="5"
+        style="background-color: rgb(209, 209, 209); border-radius: 10px;">
+        <div class="stats" style="height: 100%; width: 100%; background-color: #3f51b5;display: flex; flex-direction: column; align-items: flex-start;">
+            <span><img src="" alt="">Assignee</span>
+            <span><img src="" alt="">Creator</span>
+        </div>
+    </mat-grid-tile>
+    <mat-grid-tile
+        [colspan]="5"
+        [rowspan]="1"
+        style="background-color: aqua;">
+        <p>
+            Log
+        </p>
+    </mat-grid-tile>
+</mat-grid-list>
+</div>-->

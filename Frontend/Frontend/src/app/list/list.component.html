@@ -1,0 +1,92 @@
+<div class="container" *ngIf="enableMatView">
+    <div class="details" *ngIf="!isInEditMode">
+        <h3 class="title">{{list.name}}</h3>
+        <div class="actions">
+            <a class="action" *ngIf="list.creator.id == api.getUserId()" mat-stroked-button (click)="editList()">Edit List</a>
+            <a class="action" *ngIf="list.creator.id == api.getUserId()" mat-stroked-button (click)="openUserManagerDialog()">Manage Users</a>
+        </div>
+        <p class="description" [innerHTML]="displayText()">{{list.description}}</p>
+    </div>
+
+
+    <div class="details" *ngIf="isInEditMode">
+        <mat-form-field class="edit-name">
+            <mat-label>Title</mat-label>
+            <input matInput minlength="3" maxlength="50" placeholder="List Name..." [(ngModel)]="editedList.name">
+        </mat-form-field>
+        <div class="actions">
+            <a class="action" mat-stroked-button color="warn" (click)="cancelEditing()">Cancel</a>
+            <a class="action" mat-stroked-button color="primary" (click)="openSaveDialog()">Save</a>
+        </div>
+        <mat-form-field class="edit-description">
+            <mat-label>Details</mat-label>
+            <textarea style="resize: none;" maxlength="700" rows="5" matInput [(ngModel)]="editedList.description" placeholder="Description..."></textarea>
+        </mat-form-field>
+    </div>
+
+<!-- 
+    =================================================
+    =================================================
+    =================================================
+    =================================================
+                Tasks STARTS HERE 
+    =================================================
+    =================================================
+    =================================================
+    =================================================
+-->
+    <div class="tasks">
+        <h3 class="tasks-title">Tasks:</h3>
+        <div class="filter-create-group">
+            <mat-form-field class="filter">
+                <mat-label>Filter</mat-label>
+                <input matInput (keyup)="getFilterText($event)" placeholder="Task title" #input>
+            </mat-form-field>
+            <a class="create-task" color="primary" mat-flat-button (click)="openCreatorDialog()">Create Task</a>
+        </div>
+    </div>
+
+    <mat-table [dataSource]="filteredDataSource" class="mat-elevation-z3">
+        <!-- Position Column -->
+        <!-- <ng-container matColumnDef="position">
+        <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.position}} </mat-cell>
+        </ng-container> -->
+    
+        <!-- Name Column -->
+        <ng-container matColumnDef="task">
+        <mat-header-cell *matHeaderCellDef> Title </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            <a [routerLink]="['/task/', element.task.id]">
+                {{element.task.title}}
+            </a>
+        </mat-cell>
+        </ng-container>
+    
+        <!-- Weight Column -->
+        <ng-container matColumnDef="priority">
+        <mat-header-cell *matHeaderCellDef> Priority </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.priority}} </mat-cell>
+        </ng-container>
+    
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="workflow" >
+        <mat-header-cell *matHeaderCellDef> Workflow </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            <mat-chip-option color="primary">{{element.workflow}}</mat-chip-option>
+        </mat-cell>
+        </ng-container>
+
+        <!-- Assignee -->
+        <ng-container matColumnDef="assignee">
+        <mat-header-cell *matHeaderCellDef> Assignee </mat-header-cell>
+        <mat-cell *matCellDef="let element"> 
+            <span><img class="assignee-pic" [src]="element.assignee.image"/></span>
+            <span>{{element.assignee.firstName}} {{element.assignee.lastName}}</span>
+        </mat-cell>
+        </ng-container>
+    
+        <mat-header-row sticky="true" *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+</div>

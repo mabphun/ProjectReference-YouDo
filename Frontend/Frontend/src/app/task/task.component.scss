@@ -1,0 +1,182 @@
+.container{
+    margin: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 10px;
+    grid-row-gap: 0px;
+}
+.title{
+    margin-bottom: 10px;
+    font-size: 1.5em;
+}
+.description{
+    background-color: rgb(234, 231, 231);
+    padding: 5px;
+    margin: 0px;
+    border-radius: 10px;
+}
+.actions{
+    margin-bottom: 10px;
+}
+
+.action{
+    margin-right: 10px;
+}
+
+.details { 
+    grid-area: 1 / 1 / 2 / 4; 
+}
+.info{ 
+    grid-area: 1 / 4 / 2 / 5;
+}
+
+.details, .info{
+    //background-color: rgb(234, 231, 231);
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0px 1px 5px grey;
+}
+
+.info-line{
+    margin-bottom: 1em;
+}
+
+.userDisplay div{
+    display: inline;
+}
+
+.edit-icon{
+    top: 10px;
+    position: relative;
+    margin-left: 5px;
+    padding: 5px;
+}
+.edit-icon:hover{
+    background-color: rgb(234, 231, 231);
+    border-radius: 20px;
+}
+
+.userDisplay div img{
+    width: 18px;
+    height: 18px;
+    border-radius: 15px;
+    margin-right: 5px;
+    margin-left: 5px;
+    position: relative;
+    top: 3px;
+}
+
+.chip{    
+    text-align: center;
+}
+
+.pic-chip{
+    top: 5px;
+}
+
+.prio-high{
+    position: relative;
+    top: 4px;
+    background-color: red;
+}
+
+.user-pic{
+    width: 20px;
+    margin: 3px;
+    border-radius: 10px;
+    background-color: red;
+    top: 3px;
+}
+
+//=================================================
+//=================================================
+//=================================================
+// EDIT MODE STARTS HERE
+//=================================================
+//=================================================
+//=================================================
+
+.edit-container{
+    margin: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 10px;
+    grid-row-gap: 0px;
+}
+
+.edit-description{
+    margin: 0px;
+    border-radius: 10px;
+    width: 100%;
+}
+
+.edit-title{
+    font-size: 1.5em;
+    width: 100%;
+}
+
+//=================================================
+//=================================================
+//=================================================
+// ACTIVITY STARTS HERE
+//=================================================
+//=================================================
+//=================================================
+
+.activity-container {
+    margin: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 10px;
+    grid-row-gap: 0px;
+}
+
+.activity-div{
+    grid-area: 1 / 1 / 2 / 4; 
+}
+
+.activity-title{
+    font-size: 1.5em;
+    margin: 0px;
+    margin-bottom: 5px;
+    padding: 0px;
+}
+
+.activity-element{
+    margin-bottom: 10px;
+    background-color: rgb(234, 231, 231);
+    padding: 10px;
+}
+
+.activity-name{
+    font-size: 1.2em;
+}
+
+.activity-divider{
+    margin: 5px;
+}
+
+.activity-date{
+    color: rgb(90, 89, 89);
+}
+
+.activity-parent{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+.div1 { grid-area: 1 / 1 / 2 / 2; }
+.div2 { grid-area: 1 / 2 / 2 / 3; }
+.div3 { grid-area: 1 / 3 / 2 / 4; }
+
+.activity-property{
+    text-align: right;
+    margin-right: 10px;
+}

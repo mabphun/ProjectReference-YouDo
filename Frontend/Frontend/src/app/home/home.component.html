@@ -1,0 +1,75 @@
+<div class="container">
+    <h1>Welcome to YouDo</h1>
+
+    <div class="auth" *ngIf="api.isLoggedIn()">
+        <p>Start being more productive with creating a List for your tasks.</p>
+        <a routerLink="/lists" color="primary" mat-flat-button>
+            <mat-icon>add</mat-icon>
+            Create a List
+        </a>
+
+        <div class="lists" *ngIf="lists.length > 0">
+            <p>Continue with one of your recent Tasks.</p>
+            <mat-form-field class="filter">
+                <mat-label>Filter</mat-label>
+                <input matInput (keyup)="getFilterText($event)" placeholder="Task title" #input>
+            </mat-form-field>
+            <mat-table [dataSource]="filteredDataSource" class="mat-elevation-z3">            
+                <!-- Title Column -->
+                <ng-container matColumnDef="task">
+                <mat-header-cell *matHeaderCellDef> Title </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    <a [routerLink]="['/task/', element.task.id]">
+                        {{element.task.title}}
+                    </a>
+                </mat-cell>
+                </ng-container>
+            
+                <!-- Priority Column -->
+                <ng-container matColumnDef="priority">
+                <mat-header-cell *matHeaderCellDef> Priority </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.priority}} </mat-cell>
+                </ng-container>
+            
+                <!-- Workflow Column -->
+                <ng-container matColumnDef="workflow" >
+                <mat-header-cell *matHeaderCellDef> Workflow </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    <mat-chip color="primary">{{element.workflow}}</mat-chip>
+                </mat-cell>
+                </ng-container>
+        
+                <!-- Assignee -->
+                <ng-container matColumnDef="assignee">
+                <mat-header-cell *matHeaderCellDef> Assignee </mat-header-cell>
+                <mat-cell *matCellDef="let element"> 
+                    <span><img class="assignee-pic" [src]="element.assignee.image"/></span>
+                    <span>
+                        {{element.assignee.firstName}} {{element.assignee.lastName}}
+                    </span>
+                </mat-cell>
+                </ng-container>
+
+                <!-- List name Column -->
+                <ng-container matColumnDef="listname">
+                    <mat-header-cell *matHeaderCellDef> List </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.listName}} </mat-cell>
+                </ng-container>
+            
+                <mat-header-row sticky="true" *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+        </div>
+    </div>
+
+    <div class="noauth" *ngIf="!api.isLoggedIn()">
+        <h3>Start being more productive with us!</h3>
+        <a routerLink="/login" mat-flat-button color="primary">Get started</a>
+    </div>
+
+    <!-- <ul>
+        <li><a routerLink="/register">Register</a></li>
+        <li><a routerLink="/login">Login</a></li>
+        <li><a routerLink="/logout">Logout</a></li>
+    </ul> -->
+</div>

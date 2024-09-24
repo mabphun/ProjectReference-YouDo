@@ -1,0 +1,15 @@
+<div class="container">
+    <h2>Login</h2>
+    <mat-form-field>
+        <mat-label>Username</mat-label>
+        <input matInput [(ngModel)]="this.loginModel.username">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input matInput type="password" [(ngModel)]="this.loginModel.password">
+    </mat-form-field>
+    <button class="login-btn" [disabled]="isAnyError()" mat-flat-button color="primary" (click)="sendLoginCredentials()">Login</button>
+    <hr>
+    <p>Don't have an account?</p>
+    <button routerLink="/register" mat-flat-button color="primary">Register now</button>
+</div>

@@ -1,0 +1,37 @@
+.creator{
+    width: 400px;
+}
+
+.creator mat-form-field{
+    width: 100%;
+}
+
+.est-time{
+    position: relative; 
+    top: -5px;
+}
+
+.format-error{
+    
+    margin: 0px;
+    padding: 5px;
+    border-radius: 10px;
+    background-color: rgb(254, 133, 133);
+}
+
+.format-error p{
+    margin: 0;
+}
+
+.hints strong{
+    font-size: 1.1em;
+}
+
+.h-title{
+    font-size: 1em;
+    margin: 0;
+}
+
+.h-text{
+    font-size: .9em;
+}

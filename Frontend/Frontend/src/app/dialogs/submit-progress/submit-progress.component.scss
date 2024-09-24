@@ -1,0 +1,86 @@
+.container{
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+mat-form-field{
+    width: 100%;
+}
+
+.title{
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 0px;
+    padding: 0px;
+}
+.info-line span{
+    margin-left: 10px;
+}
+
+.describer{
+    font-size: 1.1em;
+    margin: 10px 0px 10px 0px;
+    display: inline;
+}
+
+.userDisplay div img{
+    width: 18px;
+    height: 18px;
+    border-radius: 15px;
+    margin-right: 5px;
+    margin-left: 5px;
+    position: relative;
+    top: 3px;
+}
+
+.userDisplay div{
+    display: inline;
+}
+
+.edit-icon{
+    top: 10px;
+    position: relative;
+    margin-left: 5px;
+    padding: 5px;
+}
+.edit-icon:hover{
+    background-color: rgb(234, 231, 231);
+    border-radius: 20px;
+}
+
+.logger{
+    margin-top: 30px;
+}
+
+.est-time{
+    position: relative; 
+    top: -5px;
+}
+
+
+.format-error{
+    
+    margin: 0px;
+    padding: 5px;
+    border-radius: 10px;
+    background-color: rgb(254, 133, 133);
+}
+
+.format-error p{
+    margin: 0;
+}
+
+.hints strong{
+    font-size: 1.1em;
+}
+
+.h-title{
+    font-size: 1em;
+    margin: 0;
+}
+
+.h-text{
+    font-size: .9em;
+}

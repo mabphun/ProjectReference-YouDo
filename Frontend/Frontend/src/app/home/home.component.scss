@@ -1,0 +1,73 @@
+.container{
+  width: 80%;
+  margin: auto;
+  margin-top: 20px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0px 1px 5px grey;
+}
+
+.container h1{
+  text-align: center;
+}
+
+.lists{
+  margin-top: 20px;
+}
+
+// Tasks
+.tasks-title{
+  font-size: 1.5em;
+  margin: 0px;
+  margin-bottom: 5px;
+  padding: 0px;
+}
+
+.mat-mdc-table {
+  width: 100%;
+  max-height: 400px;
+  overflow: auto;
+}
+
+.mat-column-task {
+  height: 50px;
+}
+
+.mat-column-task a{
+  text-decoration: none;
+  color: blue;
+}
+
+.mat-column-task a:hover{
+  text-decoration:underline;
+}
+
+.mat-cell{
+  height: 50px;
+}
+
+.filter-create-group{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 1fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+}
+
+.filter{
+  //width: 50%;
+  grid-area: 1 / 1 / 2 / 2;
+}
+
+.create-task{
+  grid-area: 1 / 2 / 2 / 3;
+  height: 70%;
+  margin: 0px 10px 0px 10px;
+}
+
+.assignee-pic{
+  width: 20px;
+  margin: 3px;
+  border-radius: 10px;
+}

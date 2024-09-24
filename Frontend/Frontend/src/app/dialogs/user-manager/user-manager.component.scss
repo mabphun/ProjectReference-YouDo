@@ -1,0 +1,54 @@
+mat-dialog-content{
+    width: 600px;
+}
+
+mat-dialog-content div{
+    width: 100%;
+    margin: auto;
+}
+
+.container{
+    // padding: 20px;
+    // display: flex;
+    // flex-direction: column;
+    // align-items: flex-start;
+    width: 100%;
+}
+
+.search-input{
+    width: 100%;
+}
+
+.not-assigned-container{
+    height: 150px;
+    overflow-y: auto;
+    width: 100%;
+}
+
+
+.parent {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    }
+    
+    .div1 { grid-area: 1 / 1 / 2 / 4; height: 40px; margin-bottom: 10px;}
+    .div2 { grid-area: 1 / 4 / 2 / 5; height: 40px; margin-bottom: 10px;}
+
+.assigned{
+    height: 120px;
+    overflow-y: auto;
+    width: 100%;
+}
+.assigned-title{
+    font-size: 1.2em;
+    color: black;
+    text-decoration: underline;
+}
+
+.assigned-users{
+    height: 50px;
+    margin: 10px;
+}

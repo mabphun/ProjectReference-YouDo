@@ -1,0 +1,50 @@
+<h2 mat-dialog-title>Create a Task</h2>
+<mat-dialog-content>
+  <div class="creator">
+    <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput [(ngModel)]="this.data.task.title">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Description</mat-label>
+        <input matInput [(ngModel)]="this.data.task.details">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Estimated Time (in hours)</mat-label>
+      <input type="number" min="0" matInput [(ngModel)]="this.data.task.estimated">
+  </mat-form-field>
+  <div class="estimation">
+    <div>
+      <mat-icon>info</mat-icon>
+      <span *ngIf="estimation === -1">There's no task with the workflow 'Done'. Only completed tasks count in the estimation.</span>
+      <span *ngIf="estimation === 0">Your estimations are close to what it usually takes to complete a task.</span>
+      <span *ngIf="estimation === 1">Your estimations are usually lower than how much it takes to complete a task that you have created.</span>
+      <span *ngIf="estimation === 2">Your estimations are usually higher than how much it takes to complete a task that you have created.</span>
+    </div>
+    <div *ngIf="estimation !== -1 && estimation !== 0">
+      <span *ngIf="estimation === 1">Consider making a higher estimations.</span>
+      <span *ngIf="estimation === 2">Consider making a lower estimations.</span>
+      <button mat-icon-button matTooltip="This is an estimate based on the average time it takes to complete a task you have created."><mat-icon>help_outline</mat-icon></button>
+    </div>
+  </div>
+    <mat-form-field>
+        <mat-label>Deadline</mat-label>
+        <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker" [formControl]="date">
+        <mat-hint>YYYY.MM.DD</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Priority</mat-label>
+        <mat-select [(value)]="data.task.priority">
+          <mat-option value="0">Low</mat-option>
+          <mat-option value="1">Normal</mat-option>
+          <mat-option value="2">High</mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button color="warn" (click)="onNoClick()"><mat-icon>backspace</mat-icon>Cancel</button>
+  <button mat-button [disabled]="isAnyError()" color="primary" (click)="onYesClick()"><mat-icon>add_box</mat-icon>Create</button> <!-- cdkFocusInitial -->
+</mat-dialog-actions>

@@ -1,0 +1,45 @@
+<div class="container">
+    <h2>Register</h2>
+    <div class="parent">
+        <div class="div1">
+            <mat-form-field>
+                <mat-label>Username</mat-label>
+                <input matInput [(ngModel)]="this.registerModel.username">
+            </mat-form-field>
+        </div>
+        <div class="div2">
+            <mat-form-field>
+                <mat-label>Email</mat-label>
+                <input matInput type="email" [(ngModel)]="this.registerModel.email">
+            </mat-form-field>
+        </div>
+        <div class="div3">
+            <mat-form-field>
+                <mat-label>First Name</mat-label>
+                <input matInput [(ngModel)]="this.registerModel.firstName">
+            </mat-form-field>
+        </div>
+        <div class="div4">
+            <mat-form-field>
+                <mat-label>Last Name</mat-label>
+                <input matInput [(ngModel)]="this.registerModel.lastName">
+            </mat-form-field>
+        </div>
+        <div class="div5">
+            <mat-form-field>
+                <mat-label>Password</mat-label>
+                <input matInput type="password" [(ngModel)]="this.registerModel.password">
+            </mat-form-field>
+        </div>
+        <div class="div6">
+            <mat-form-field>
+                <mat-label>Image URL (optional)</mat-label>
+                <input matInput [(ngModel)]="this.registerModel.image">
+            </mat-form-field>
+        </div>
+    </div>
+    <button [disabled]="isAnyError()" mat-flat-button class="register-btn" color="primary" (click)="sendRegisterCredentials()">Register</button>
+    <hr>
+    <p>Already have an account?</p>
+    <button routerLink="/login" mat-flat-button color="primary">Login</button>
+</div>

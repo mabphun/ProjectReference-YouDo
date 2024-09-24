@@ -1,0 +1,70 @@
+<mat-toolbar color="primary">
+  <!-- <mat-button-toggle-group> -->
+    <span><a mat-flat-button color="primary" routerLink="/home">YouDo</a></span>
+    <span *ngIf="apiService.isLoggedIn()" class="navBtn"><a routerLink="/lists" mat-flat-button color="primary" ><mat-icon>assignment</mat-icon>Lists</a></span>
+    <span *ngIf="apiService.isLoggedIn()" class="navBtn"><a routerLink="/statistics" mat-button ><mat-icon>bar_chart</mat-icon>Statistics</a></span>
+    
+    <span class="example-spacer"></span>
+
+    <!-- Logged out -->
+    <a routerLink="/register" *ngIf="!apiService.isLoggedIn()" mat-flat-button color="primary" aria-label="Register">
+      <!-- <mat-icon>notifications</mat-icon> -->
+      Register
+    </a>
+    <a routerLink="/login" *ngIf="!apiService.isLoggedIn()" mat-flat-button color="primary" aria-label="Login">
+      <!-- <mat-icon>notifications</mat-icon> -->
+      Login
+    </a>
+
+    <!-- Logged in -->
+    <a *ngIf="apiService.isLoggedIn()" [matMenuTriggerFor]="matMenu" (click)="showNotifications()" mat-icon-button color="primary" title="Notifications" aria-label="Notifications">
+      <mat-icon *ngIf="!isNewNotification">notifications_none</mat-icon>
+      <mat-icon [ngClass]="{'shake': showAnimation}" *ngIf="isNewNotification">notifications</mat-icon>
+    </a>
+    
+    <!-- Icon -->
+    <a routerLink="/profile" *ngIf="apiService.isLoggedIn()" mat-button title="Profile" aria-label="Profile">
+        <mat-icon >person</mat-icon>
+        {{apiService.getUsername()}}
+      </a>
+      <!--Picture-->
+    <!-- <a href="" *ngIf="apiService.isLoggedIn()" mat-button title="Profile" aria-label="Profile">
+      <img src="https://picsum.photos/200/300" alt="" srcset="">
+      {{apiService.getUsername()}}
+    </a> -->
+    <a routerLink="/logout" *ngIf="apiService.isLoggedIn()" mat-icon-button title="Log out" aria-label="Log out">
+      <mat-icon>input</mat-icon>
+    </a>
+  <!-- </mat-button-toggle-group> -->
+  </mat-toolbar>
+
+  <mat-menu class="menu" #matMenu="matMenu" xPosition="before">
+    <div class="info">
+      <span>Notifications</span>
+      <button mat-icon-button matTooltipPosition="right" matTooltip="Notifications will disappear when you leave or reload the page.">
+        <mat-icon>warning</mat-icon>
+      </button>
+      <button (click)="clearNotifications()" [disabled]="notifications.length === 0" class="clear" mat-icon-button matTooltipPosition="right" matTooltip="Clear Notifications">
+        <mat-icon>clear</mat-icon>
+      </button>
+    </div>
+    <div class="empty" *ngIf="notifications.length === 0">
+      There isn't any notification
+    </div>
+    <div class="item" mat-menu-item *ngFor="let notif of notifications">
+      <div class="user-display">{{notif.initiatorUser.userName}} {{notif.action}} {{notif.itemType}} - {{getDate(notif.time)}}</div>
+      <div class="title-display"><a (click)="navToUrl(notif)">{{notif.itemName}}</a></div> 
+      <!-- [routerLink]="['/', notif.itemType ,'/', notif.itemId]" -->
+    </div>
+    <!-- <div mat-menu-item>
+      <div style="font-size: 0.8em;">USERNAME created - {{getDate('2024.04.24.')}}</div>
+      <div style="font-size: 1em;">ITEMNAME WITH LONG LONG NAME</div>
+    </div> -->
+    <!-- <button mat-menu-item>
+      <div>USERNAME created- DATETIME</div>
+      <div>ITEMNAME WITH LONG LONG NAME</div>
+    </button>
+    <button mat-menu-item>Item 2</button> -->
+  </mat-menu>
+
+  

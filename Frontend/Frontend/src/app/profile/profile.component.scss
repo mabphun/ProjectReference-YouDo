@@ -1,0 +1,70 @@
+.container{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    margin: 20px;
+}
+    
+.div1 { 
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+.div2 { 
+    grid-area: 1 / 2 / 2 / 3; 
+}
+
+.details, .links{
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0px 1px 5px grey;
+    width: 90%;
+    margin: auto;
+}
+
+.details{
+    text-align: center;
+}
+
+.details img{
+    width: 150px;
+    height: 150px;
+    border-radius: 100px;
+}
+
+.details h3{
+    margin: 0px;
+    padding: 0px;
+    font-size: 1.4em;
+}
+
+.details p{
+    color: grey;
+    margin: 0px;
+    padding: 0px;
+}
+
+
+// .lists, .tasks{
+//     margin-bottom: 20px;
+//     margin-left: 20px;
+// }
+
+.title{
+    margin: 0px;
+}
+
+.list, .task{
+    padding-bottom: 5px;
+}
+
+.list a, .task a{
+    color: blue;
+    text-decoration: none;
+}
+
+.list a:hover, .task a:hover{
+    text-decoration: underline;
+}

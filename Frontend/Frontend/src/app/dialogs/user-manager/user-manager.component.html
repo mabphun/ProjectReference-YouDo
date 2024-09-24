@@ -1,0 +1,49 @@
+<h2 mat-dialog-title>Manage Users</h2>
+<mat-dialog-content>
+    <div class="container">
+
+        <mat-form-field class="search-input">
+            <mat-label>Username</mat-label>
+            <input 
+                matInput
+                type="text" 
+                (keyup)="search(getValue($event))" 
+                id="name" 
+                placeholder="Search"
+                />
+        </mat-form-field>
+        <div>
+            <div class="not-assigned-container">
+                <div class="parent" *ngFor="let user of queryUsers">
+                    <div class="div1">{{user.userName}}</div>
+                    <div class="div2">
+                        <button mat-flat-button color="primary" (click)="addUser(user)">
+                            Add
+                        </button>
+                    </div>
+                </div>
+            </div>
+    
+            <h3 class="assigned-title">Assigned users:</h3>
+            <div class="assigned">
+                <div class="parent" *ngFor="let user of assigned">
+                    <div class="div1">{{user.userName}}</div>
+                    <div class="div2">
+                        <button 
+                            mat-flat-button
+                            color="warn"
+                            *ngIf="user.id !== data.list.creator.id" 
+                            (click)="removeUser(user)"
+                            >
+                            Remove
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button color="warn" (click)="onNoClick()">	<mat-icon>backspace</mat-icon>Cancel</button> <!-- (click)="onNoClick()"-->
+  <button mat-button color="primary" (click)="onYesClick()" cdkFocusInitial><mat-icon>add_box</mat-icon>Save</button> <!-- cdkFocusInitial -->
+</mat-dialog-actions>
